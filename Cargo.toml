@@ -1,6 +1,6 @@
 [package]
 name = "kache"
-version = "1.2.2"
+version = "1.2.2-textil.1"
 edition = "2024"
 description = "Compiler cache for Rust, C/C++ and CUDA, with S3, GCS, shared-filesystem and OCI remotes."
 license = "Apache-2.0"
