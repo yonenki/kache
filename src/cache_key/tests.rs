@@ -11567,6 +11567,22 @@ fn test_parse_dep_info_empty() {
 }
 
 #[test]
+fn test_parse_dep_info_skips_leading_comment_lines() {
+    let input = "# ohm-raw-checksum-paths-v2\n\
+                 target.d: src/lib.rs src/observation.rs\n\n\
+                 src/lib.rs:\nsrc/observation.rs:\n\
+                 # checksum:blake3=00 file_len:1 src/lib.rs\n";
+    let files = parse_dep_info(input);
+    assert_eq!(
+        files,
+        [
+            std::path::PathBuf::from("src/lib.rs"),
+            std::path::PathBuf::from("src/observation.rs"),
+        ]
+    );
+}
+
+#[test]
 fn test_parse_dep_info_single_file() {
     let input = "deps.d: src/main.rs\n";
     let files = parse_dep_info(input);

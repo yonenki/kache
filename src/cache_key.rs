@@ -8721,8 +8721,12 @@ fn read_dep_info_file(dep_file: &Path) -> Result<String> {
 ///
 /// Format: `target: dep1 dep2 dep3`
 /// Handles `\ ` escaped spaces in paths. Returns sorted paths.
+///
+/// Comment lines may precede the first rule: Ohm's rustc starts a checksummed
+/// dep-info with `# ohm-raw-checksum-paths-v2`. Taking the literal first line
+/// would key the crate on its root file alone and restore stale artifacts.
 pub(crate) fn parse_dep_info(dep_info: &str) -> Vec<std::path::PathBuf> {
-    let line = match dep_info.lines().next() {
+    let line = match dep_info.lines().find(|line| !line.starts_with('#')) {
         Some(l) => l,
         None => return vec![],
     };
